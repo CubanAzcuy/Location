@@ -42,7 +42,7 @@ public class TrieNode {
             return new ArrayList<>();
         }
 
-        if(externalQuery.length() == 0 || externalQuery.length() == 1) {
+        if(externalQuery.length() == 0) {
             return getWords();
         } else {
             Character searchChar = externalQuery.substring(0, 1).toCharArray()[0];

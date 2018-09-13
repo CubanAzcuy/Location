@@ -15,7 +15,9 @@ public class ExampleUnitTest {
     public void canBuildTry() {
         TrieNode root = new TrieNode();
         root.insert("car");
+        root.insert("cat");
         List<String> carWords = root.query("car");
+        List<String> caWords = root.query("ca");
         Assert.assertEquals(carWords.size(), 1);
     }
 }
