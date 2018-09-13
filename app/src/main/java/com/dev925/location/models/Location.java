@@ -5,9 +5,14 @@ import com.google.gson.annotations.SerializedName;
 public class Location {
 
     @SerializedName("_id") long id;
-    String country;
-    String name;
-    Coordinates coord;
+    public String country;
+    public String name;
+    public Coordinates coord;
 
     Location(){}
+
+    @Override
+    public String toString() {
+        return name + ", " + country;
+    }
 }

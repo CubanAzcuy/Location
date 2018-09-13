@@ -31,17 +31,17 @@ public class ExampleUnitTest {
 
     @Test
     public void attemptToBuildTrie() {
-        TrieNode root = new TrieNode();
-        root.insert("car");
-        root.insert("cat");
+        TrieNode<String> root = new TrieNode<String>();
+        root.insert("car", "car");
+        root.insert("cat", "cat");
         List<String> carWords = root.query("car");
         Assert.assertEquals(carWords.size(), 1);
     }
     @Test
     public void attemptToQueryTrie() {
-        TrieNode root = new TrieNode();
-        root.insert("car");
-        root.insert("cat");
+        TrieNode<String> root = new TrieNode<String>();
+        root.insert("car", "car");
+        root.insert("cat", "cat");
         List<String> carWords = root.query("car");
         Assert.assertEquals(carWords.size(), 1);
 
@@ -56,8 +56,7 @@ public class ExampleUnitTest {
         byte[] buffer = new byte[size];
         is.read(buffer);
         is.close();
-        String jsonAsString = new String(buffer, "UTF-8");
-        return jsonAsString;
+        return new String(buffer, "UTF-8");
     }
 
     @Test
@@ -66,12 +65,37 @@ public class ExampleUnitTest {
         Assert.assertTrue(jsonAsString != null && jsonAsString.length() > 0);
     }
 
+    private List createLocationList() throws IOException {
+        String jsonAsString = readFile();
+        Type listType = new TypeToken<ArrayList<Location>>(){}.getType();
+        return gson.fromJson(jsonAsString, listType);
+    }
 
     @Test
     public void attemptToCreateJSONList() throws IOException {
-        String jsonAsString = readFile();
-        Type listType = new TypeToken<ArrayList<Location>>(){}.getType();
-        List<Location> locationList = gson.fromJson(jsonAsString, listType);
+        List<Location> locationList = createLocationList();
         Assert.assertTrue(locationList.size() > 0);
+    }
+
+    private TrieNode createLocationTrieFromList() throws IOException {
+        List<Location> locationList = createLocationList();
+        TrieNode root = new TrieNode();
+        for (Location location: locationList) {
+            root.insert(location.toString(), location);
+        }
+        return root;
+    }
+
+    @Test
+    public void attemptToCreateTrieFromList() throws IOException {
+        TrieNode root = createLocationTrieFromList();
+        Assert.assertTrue(root.query("").size() > 0);
+    }
+
+    @Test
+    public void queryForSpecificCity() throws IOException {
+        TrieNode root = createLocationTrieFromList();
+        Assert.assertTrue(root.query("Atlanta").size() == 1);
+
     }
 }

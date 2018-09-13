@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TrieNode {
+public class TrieNode<T> {
     private HashMap<Character, TrieNode> children = new HashMap<>();
-    private String content;
+    private T content;
     private boolean isWord;
 
     //Some Assumption Here that Words are case sensitive this can be changed in the future
-    public void insert(String word) {
+    public void insert(String word, T data) {
         if(word != null && word.trim().length() > 0) {
-            insert(word, word);
+            insertInToTrie(word, data);
         }
     }
 
-    private void insert(String orginalWord, String turncatedWord) {
+    private void insertInToTrie(String turncatedWord, T data) {
         Character searchChar = turncatedWord.substring(0, 1).toCharArray()[0];
 
         TrieNode node = children.get(searchChar);
@@ -29,14 +29,14 @@ public class TrieNode {
 
         if(turncatedWord.length() != 1) {
             String newTurncatedWord = turncatedWord.substring(1, turncatedWord.length());
-            node.insert(orginalWord, newTurncatedWord);
+            node.insertInToTrie(newTurncatedWord, data);
         } else {
             node.isWord = true;
-            node.content = orginalWord;
+            node.content = data;
         }
     }
 
-    public List<String> query(String externalQuery) {
+    public List<T> query(String externalQuery) {
 
         if(externalQuery == null) {
             return new ArrayList<>();
@@ -57,8 +57,8 @@ public class TrieNode {
         }
     }
 
-    private List<String> getWords() {
-        List<String> words = new ArrayList<>();
+    private List<T> getWords() {
+        List<T> words = new ArrayList<>();
 
         if(isWord) {
             words.add(content);
