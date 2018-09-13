@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,7 +96,20 @@ public class ExampleUnitTest {
     @Test
     public void queryForSpecificCity() throws IOException {
         TrieNode root = createLocationTrieFromList();
+        long oldTime = new Date().getTime();
+        List<Location> locations = root.query("A");
+        long newTime = new Date().getTime();
+        System.out.println("This query took around: " + (newTime - oldTime));
         Assert.assertTrue(root.query("Atlanta").size() == 1);
+    }
 
+    @Test
+    public void queryForNull() throws IOException {
+        TrieNode root = createLocationTrieFromList();
+        long oldTime = new Date().getTime();
+        List<Location> locations = root.query("Aasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
+        long newTime = new Date().getTime();
+        System.out.println("This query took around: " + (newTime - oldTime));
+        Assert.assertTrue(locations.size() == 0);
     }
 }
