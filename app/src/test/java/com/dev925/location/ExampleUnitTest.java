@@ -1,10 +1,18 @@
 package com.dev925.location;
 
+import com.dev925.location.models.Location;
+import com.dev925.location.utils.TrieNode;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,6 +21,14 @@ import java.util.List;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+    private Gson gson;
+
+    @Before
+    public void setUp() {
+        gson = new Gson();
+    }
+
     @Test
     public void attemptToBuildTrie() {
         TrieNode root = new TrieNode();
@@ -33,9 +49,7 @@ public class ExampleUnitTest {
         Assert.assertEquals(caWords.size(), 2);
     }
 
-
-    @Test
-    public void attemptToReadFile() throws IOException {
+    private String readFile() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("cities.json");
         int size = is.available();
@@ -43,8 +57,21 @@ public class ExampleUnitTest {
         is.read(buffer);
         is.close();
         String jsonAsString = new String(buffer, "UTF-8");
+        return jsonAsString;
+    }
+
+    @Test
+    public void attemptToReadFile() throws IOException {
+        String jsonAsString = readFile();
         Assert.assertTrue(jsonAsString != null && jsonAsString.length() > 0);
     }
 
 
+    @Test
+    public void attemptToCreateJSONList() throws IOException {
+        String jsonAsString = readFile();
+        Type listType = new TypeToken<ArrayList<Location>>(){}.getType();
+        List<Location> locationList = gson.fromJson(jsonAsString, listType);
+        Assert.assertTrue(locationList.size() > 0);
+    }
 }

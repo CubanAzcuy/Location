@@ -1,4 +1,4 @@
-package com.dev925.location;
+package com.dev925.location.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
