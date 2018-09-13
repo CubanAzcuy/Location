@@ -1,8 +1,9 @@
 package com.dev925.location;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.List;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -11,7 +12,10 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void canBuildTry() {
+        TrieNode root = new TrieNode();
+        root.insert("car");
+        List<String> carWords = root.query("car");
+        Assert.assertEquals(carWords.size(), 1);
     }
 }
