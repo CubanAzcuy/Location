@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,17 +17,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dev925.location.models.Location;
+import com.dev925.location.utils.DataStore;
 
 import java.util.List;
 
 public class SearchFragment extends Fragment {
 
+    private SearchTask searchTask;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         return rootView;
@@ -63,16 +67,27 @@ public class SearchFragment extends Fragment {
         }
         @Override
         public boolean onQueryTextChange(String newText) {
-
+            if(searchTask != null) {
+                searchTask.cancel(true);
+            }
+            searchTask = new SearchTask();
+            searchTask.execute(newText);
             return false;
         }
     };
 
-    private static class Search extends AsyncTask<String, Void, List<Location>> {
+    private static class SearchTask extends AsyncTask<String, Void, List<Location>> {
         @Override
         protected List<Location> doInBackground(String... strings) {
+            return DataStore.search(strings[0]);
+        }
 
-            return null;
+        @Override
+        protected void onPostExecute(List<Location> result) {
+            if(!isCancelled()) {
+                Log.d("Test", Integer.valueOf(result.size()).toString());
+            }
         }
     }
+
 }

@@ -10,12 +10,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        addSearchFragment();
+        addLoadingFragment();
     }
 
     public void addLoadingFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, null);
+        transaction.replace(R.id.fragment_container, new LoadingFragment());
         transaction.addToBackStack(null);
         transaction.commit();
     }

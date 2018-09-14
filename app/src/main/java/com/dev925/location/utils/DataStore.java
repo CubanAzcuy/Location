@@ -20,6 +20,7 @@ public class DataStore {
 
     public static DataStore create(Context context, int resource) {
         if (instance == null) {
+            instance = new DataStore();
             InputStream is = context.getResources().openRawResource(resource);
             String json = readInputStream(is);
             List<Location> list = createLocationList(json);
@@ -58,6 +59,7 @@ public class DataStore {
     }
 
     public static List<Location> search(String query) {
+        if(instance == null) return new ArrayList<>();
         return instance.rootnode.query(query);
     }
 
