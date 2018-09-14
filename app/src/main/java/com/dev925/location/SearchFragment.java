@@ -1,6 +1,7 @@
 package com.dev925.location;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dev925.location.models.Location;
+
+import java.util.List;
+
 public class SearchFragment extends Fragment {
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,7 +46,6 @@ public class SearchFragment extends Fragment {
         item.setActionView(searchView);
 
         searchView.setOnQueryTextListener(searchQueryTextListener);
-        searchView.setOnClickListener(searchOnClick);
     }
 
     @NonNull
@@ -58,14 +63,16 @@ public class SearchFragment extends Fragment {
         }
         @Override
         public boolean onQueryTextChange(String newText) {
+
             return false;
         }
     };
 
-    View.OnClickListener searchOnClick = new View.OnClickListener() {
+    private static class Search extends AsyncTask<String, Void, List<Location>> {
         @Override
-        public void onClick(View v) {
+        protected List<Location> doInBackground(String... strings) {
 
+            return null;
         }
-    };
+    }
 }

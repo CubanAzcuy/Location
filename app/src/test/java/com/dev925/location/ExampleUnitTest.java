@@ -1,19 +1,15 @@
 package com.dev925.location;
 
 import com.dev925.location.models.Location;
+import com.dev925.location.utils.DataStore;
 import com.dev925.location.utils.TrieNode;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,14 +18,7 @@ import java.util.List;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
-
-    private Gson gson;
-
-    @Before
-    public void setUp() {
-        gson = new Gson();
-    }
-
+    
     @Test
     public void attemptToBuildTrie() {
         TrieNode<String> root = new TrieNode<String>();
@@ -50,26 +39,21 @@ public class ExampleUnitTest {
         Assert.assertEquals(caWords.size(), 2);
     }
 
-    private String readFile() throws IOException {
+    private String readFile() {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("cities.json");
-        int size = is.available();
-        byte[] buffer = new byte[size];
-        is.read(buffer);
-        is.close();
-        return new String(buffer, "UTF-8");
+        return DataStore.readInputStream(is);
     }
 
     @Test
-    public void attemptToReadFile() throws IOException {
+    public void attemptToReadFile() {
         String jsonAsString = readFile();
         Assert.assertTrue(jsonAsString != null && jsonAsString.length() > 0);
     }
 
-    private List createLocationList() throws IOException {
+    private List createLocationList() {
         String jsonAsString = readFile();
-        Type listType = new TypeToken<ArrayList<Location>>(){}.getType();
-        return gson.fromJson(jsonAsString, listType);
+        return DataStore.createLocationList(jsonAsString);
     }
 
     @Test
@@ -80,11 +64,7 @@ public class ExampleUnitTest {
 
     private TrieNode createLocationTrieFromList() throws IOException {
         List<Location> locationList = createLocationList();
-        TrieNode root = new TrieNode();
-        for (Location location: locationList) {
-            root.insert(location.toString(), location);
-        }
-        return root;
+        return DataStore.createTrie(locationList);
     }
 
     @Test
