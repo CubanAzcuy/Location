@@ -12,7 +12,7 @@ public class TrieNode<T> {
     //Some Assumption Here that Words are case sensitive this can be changed in the future
     public void insert(String word, T data) {
         if(word != null && word.trim().length() > 0) {
-            word = word.trim().toLowerCase();
+            word = cleanQuery(word);
             insertInToTrie(word, data);
         }
     }
@@ -38,13 +38,14 @@ public class TrieNode<T> {
     }
 
     public List<T> query(String externalQuery) {
-
         if(externalQuery == null) {
             return new ArrayList<>();
         }
 
-        externalQuery = externalQuery.trim().toLowerCase();
+        return internalQuery(cleanQuery(externalQuery));
+    }
 
+    public List<T>  internalQuery(String externalQuery) {
         if(externalQuery.length() == 0) {
             return getWords();
         } else {
@@ -74,6 +75,10 @@ public class TrieNode<T> {
         }
 
         return words;
+    }
+
+    private String cleanQuery(String term) {
+        return term.trim().toLowerCase().replaceAll("[^A-Za-z0-9]", "");
     }
 }
 
