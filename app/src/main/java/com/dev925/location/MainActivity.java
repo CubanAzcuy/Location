@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.dev925.location.features.loading.LoadingFragment;
 import com.dev925.location.features.map.MapFragment;
 import com.dev925.location.features.search.SearchFragment;
-import com.dev925.location.models.Coordinates;
 import com.dev925.location.models.Location;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,9 +19,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Coordinates coordinates = new Coordinates(33.744336834018846, -84.39008675515653);
-        Location location = new Location("Atlanta", "USA", coordinates);
-        addLocationFragment(location);
+        addLoadingFragment();
+
+//        Coordinates coordinates = new Coordinates(33.744336834018846, -84.39008675515653);
+//        Location location = new Location("Atlanta", "USA", coordinates);
+//        addLocationFragment(location);
     }
 
     public void addLoadingFragment() {
