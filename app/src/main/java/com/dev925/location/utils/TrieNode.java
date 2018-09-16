@@ -9,7 +9,6 @@ public class TrieNode<T> {
     private T content;
     private boolean isWord;
 
-    //Some Assumption Here that Words are case sensitive this can be changed in the future
     public void insert(String word, T data) {
         if(word != null && word.trim().length() > 0) {
             word = cleanQuery(word);
