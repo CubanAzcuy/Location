@@ -69,7 +69,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .title(location.toString()));
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 12.0f));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 8.0f));
         marker.showInfoWindow();
     }
 
