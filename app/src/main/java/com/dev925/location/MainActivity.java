@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import com.dev925.location.features.loading.LoadingFragment;
+import com.dev925.location.features.search.SearchFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

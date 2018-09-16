@@ -1,4 +1,4 @@
-package com.dev925.location;
+package com.dev925.location.features.search;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -7,8 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,14 +17,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dev925.location.R;
 import com.dev925.location.models.Location;
 import com.dev925.location.utils.DataStore;
+import com.dev925.location.utils.ResultHandler;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements ResultHandler<List<Location>> {
 
     private SearchTask searchTask;
+    private RecyclerView recyclerView;
+    private SearchAdapter searchAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +39,22 @@ public class SearchFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.location_recyclerview);
+        setupViews();
+
         return rootView;
+    }
+
+    private void setupViews() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        searchAdapter = new SearchAdapter();
+        recyclerView.setAdapter(searchAdapter);
+
     }
 
     @Override
@@ -60,6 +81,11 @@ public class SearchFragment extends Fragment {
         return new SearchView(themeContext);
     }
 
+    @Override
+    public void onResult(List<Location> result) {
+        searchAdapter.updateContent(result);
+    }
+
     SearchView.OnQueryTextListener searchQueryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
@@ -70,13 +96,19 @@ public class SearchFragment extends Fragment {
             if(searchTask != null) {
                 searchTask.cancel(true);
             }
-            searchTask = new SearchTask();
+            searchTask = new SearchTask(SearchFragment.this);
             searchTask.execute(newText);
             return false;
         }
     };
 
     private static class SearchTask extends AsyncTask<String, Void, List<Location>> {
+        WeakReference<ResultHandler<List<Location>>> resultHandler;
+
+        public SearchTask(ResultHandler<List<Location>> handler) {
+            resultHandler = new WeakReference<>(handler);
+        }
+
         @Override
         protected List<Location> doInBackground(String... strings) {
             return DataStore.search(strings[0]);
@@ -84,9 +116,10 @@ public class SearchFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Location> result) {
-            if(!isCancelled()) {
-                Log.d("Test", Integer.valueOf(result.size()).toString());
+            if(!isCancelled() && resultHandler.get() != null) {
+                resultHandler.get().onResult(result);
             }
+
         }
     }
 
