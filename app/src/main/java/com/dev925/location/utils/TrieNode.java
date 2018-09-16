@@ -78,7 +78,11 @@ public class TrieNode<T> {
     }
 
     private String cleanQuery(String term) {
-        return term.trim().toLowerCase().replaceAll("[^A-Za-z0-9]", "");
+        try {
+            return term.trim().toLowerCase().replaceAll("[^A-Za-z0-9]", "");
+        } catch (Exception e) {
+            return term.trim().toLowerCase();
+        }
     }
 }
 

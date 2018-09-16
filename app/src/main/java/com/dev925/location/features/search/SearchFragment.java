@@ -17,15 +17,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dev925.location.MainActivity;
 import com.dev925.location.R;
 import com.dev925.location.models.Location;
 import com.dev925.location.utils.DataStore;
 import com.dev925.location.utils.ResultHandler;
+import com.dev925.location.utils.SelectionResultHandler;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class SearchFragment extends Fragment implements ResultHandler<List<Location>> {
+public class SearchFragment extends Fragment implements ResultHandler<List<Location>>, SelectionResultHandler<Location> {
 
     private SearchTask searchTask;
     private RecyclerView recyclerView;
@@ -35,6 +37,7 @@ public class SearchFragment extends Fragment implements ResultHandler<List<Locat
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        searchAdapter = new SearchAdapter(this);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +58,6 @@ public class SearchFragment extends Fragment implements ResultHandler<List<Locat
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        searchAdapter = new SearchAdapter();
         recyclerView.setAdapter(searchAdapter);
 
     }
@@ -93,6 +95,14 @@ public class SearchFragment extends Fragment implements ResultHandler<List<Locat
     @Override
     public void onResult(List<Location> result) {
         searchAdapter.updateContent(result);
+    }
+
+    @Override
+    public void onSelection(Location location) {
+        if(getActivity() instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.addLocationFragment(location);
+        }
     }
 
     SearchView.OnQueryTextListener searchQueryTextListener = new SearchView.OnQueryTextListener() {
