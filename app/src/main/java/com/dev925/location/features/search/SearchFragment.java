@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,8 +44,13 @@ public class SearchFragment extends Fragment implements ResultHandler<List<Locat
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
+        if(actionBar != null) {
+            actionBar.show();
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+        }
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.location_recyclerview);
         setupViews();
@@ -91,6 +97,7 @@ public class SearchFragment extends Fragment implements ResultHandler<List<Locat
         if(themeContext == null) themeContext = getContext();
         return new SearchView(themeContext);
     }
+
 
     @Override
     public void onResult(List<Location> result) {
