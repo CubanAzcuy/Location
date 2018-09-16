@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class LoadingFragment extends Fragment implements ResultHandler<Void> {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_loading, container, false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         return rootView;
     }
 
@@ -39,16 +41,12 @@ public class LoadingFragment extends Fragment implements ResultHandler<Void> {
         }
     }
 
-    private void loaded() {
+    @Override
+    public void onResult(Void result) {
         if(getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.addSearchFragment();
         }
-    }
-
-    @Override
-    public void onResult(Void result) {
-
     }
 
     private static class LoadCache extends AsyncTask<Void, Void, Void> {

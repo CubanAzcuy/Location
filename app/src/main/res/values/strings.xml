@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Location</string>
+    <string name="loading_location_search">Loading Location Search</string>
 </resources>

@@ -40,6 +40,9 @@ public class SearchFragment extends Fragment implements ResultHandler<List<Locat
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.location_recyclerview);
         setupViews();
 
@@ -58,6 +61,13 @@ public class SearchFragment extends Fragment implements ResultHandler<List<Locat
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        searchTask = new SearchTask(SearchFragment.this);
+        searchTask.execute("");
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
@@ -65,7 +75,6 @@ public class SearchFragment extends Fragment implements ResultHandler<List<Locat
 
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = createSearchView();
-
 
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
         item.setActionView(searchView);

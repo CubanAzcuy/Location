@@ -21,11 +21,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewholder> {
 
     @Override
     public void onBindViewHolder(@NonNull SearchViewholder searchViewholder, int position) {
-        searchViewholder.bind(locations.get(0));
+        searchViewholder.bind(locations.get(position));
     }
 
     public void updateContent(List<Location> locationList) {
         locations = locationList;
+        notifyDataSetChanged();
     }
 
 
