@@ -6,8 +6,10 @@ import com.dev925.location.models.Location;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +24,33 @@ public class DataStore {
         if (instance == null) {
             instance = new DataStore();
             InputStream is = context.getResources().openRawResource(resource);
-            String json = readInputStream(is);
-            List<Location> list = createLocationList(json);
-            instance.rootnode = createTrie(list);
+            try {
+                instance.rootnode = readFile(is);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return instance;
+    }
+
+    public static TrieNode<Location> readFile(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        TrieNode<Location> locationTrieNode = new TrieNode<>();
+
+        while(reader.ready()) {
+            String line = reader.readLine();
+            //ignore array start
+            if(!(line.equals("[") || line.equals("]"))) {
+                if(line.substring(line.length()-1, line.length()).equals(",")) {
+                    line = line.substring(0, line.length()-1);
+                }
+                Location location = gson.fromJson(line, Location.class);
+                locationTrieNode.insert(location.toString(), location);
+            }
+        }
+
+        return locationTrieNode;
     }
 
     public static String readInputStream(InputStream is) {

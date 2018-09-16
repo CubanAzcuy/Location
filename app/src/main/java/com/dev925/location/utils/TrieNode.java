@@ -47,7 +47,7 @@ public class TrieNode<T> {
 
     public List<T>  internalQuery(String externalQuery) {
         if(externalQuery.length() == 0) {
-            return getWords();
+            return getWords(0);
         } else {
             Character searchChar = externalQuery.substring(0, 1).toCharArray()[0];
             String internalQuery = externalQuery.substring(1, externalQuery.length());
@@ -61,8 +61,12 @@ public class TrieNode<T> {
         }
     }
 
-    private List<T> getWords() {
+    private List<T> getWords(int size) {
         List<T> words = new ArrayList<>();
+
+        if(size > 500) {
+            return words;
+        }
 
         if(isWord) {
             words.add(content);
@@ -70,7 +74,12 @@ public class TrieNode<T> {
 
         if(!children.isEmpty()) {
             for (Character key : children.keySet()) {
-                words.addAll(children.get(key).getWords());
+                words.addAll(children.get(key).getWords(size+words.size()));
+
+                if(size+words.size() > 500) {
+                    return words;
+                }
+
             }
         }
 

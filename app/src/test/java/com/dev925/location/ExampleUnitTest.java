@@ -74,6 +74,14 @@ public class ExampleUnitTest {
     }
 
     @Test
+    public void convertToTrieSingleRead() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream is = classLoader.getResourceAsStream("cities.json");
+        TrieNode root = DataStore.readFile(is);
+        Assert.assertTrue(root.query("").size() > 0);
+    }
+
+    @Test
     public void queryForSpecificCity() throws IOException {
         TrieNode root = createLocationTrieFromList();
         long oldTime = new Date().getTime();
